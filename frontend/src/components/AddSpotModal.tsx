@@ -117,8 +117,56 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
     }))
   }
 
+  // 图片压缩处理
+  const compressImage = (file: File, maxWidth: number = 400, maxHeight: number = 400): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      const reader = new FileReader()
+
+      reader.onload = (e) => {
+        img.src = e.target?.result as string
+      }
+
+      img.onload = () => {
+        // 计算缩放比例
+        let width = img.width
+        let height = img.height
+        
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width
+          width = maxWidth
+        }
+        if (height > maxHeight) {
+          width = (width * maxHeight) / height
+          height = maxHeight
+        }
+
+        // 创建canvas压缩
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+        
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          reject(new Error('无法创建canvas上下文'))
+          return
+        }
+
+        ctx.drawImage(img, 0, 0, width, height)
+        
+        // 使用中等质量压缩
+        const compressed = canvas.toDataURL('image/jpeg', 0.7)
+        resolve(compressed)
+      }
+
+      img.onerror = () => reject(new Error('图片加载失败'))
+      reader.onerror = () => reject(new Error('文件读取失败'))
+      reader.readAsDataURL(file)
+    })
+  }
+
   // 图片上传处理
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       // 验证文件类型
@@ -127,20 +175,21 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
         return
       }
 
-      // 验证文件大小（最大 5MB）
-      if (file.size > 5 * 1024 * 1024) {
-        alert('图片大小不能超过 5MB')
+      // 验证文件大小（最大 2MB，优化存储）
+      if (file.size > 2 * 1024 * 1024) {
+        alert('图片大小不能超过 2MB，请压缩图片后上传')
         return
       }
 
-      // 转换为 Base64
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const base64 = event.target?.result as string
-        setImagePreview(base64)
-        setFormData((prev) => ({ ...prev, imageUrl: base64 }))
+      try {
+        // 压缩图片
+        const compressedBase64 = await compressImage(file)
+        setImagePreview(compressedBase64)
+        setFormData((prev) => ({ ...prev, imageUrl: compressedBase64 }))
+      } catch (error) {
+        console.error('图片压缩失败:', error)
+        alert('图片处理失败，请重试')
       }
-      reader.readAsDataURL(file)
     }
   }
 
@@ -362,14 +411,15 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
           {/* 打招呼/留言 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              打招呼/简短留言
+              打招呼/简短留言 <span className="text-gray-400">(最多50字)</span>
             </label>
             <textarea
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="如：欢迎来找我玩！毕业快乐！常联系~"
+              placeholder="如：欢迎来找我玩！毕业快乐！"
               rows={2}
+              maxLength={50}
               className="w-full px-4 py-2.5 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300 outline-none transition-all bg-emerald-50/30 resize-none"
             />
           </div>
@@ -396,7 +446,7 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
                 </button>
               </div>
             ) : (
-              <div className="border-2 border-dashed border-purple-200 rounded-xl p-4 text-center bg-purple-50/30 hover:bg-purple-50 transition-all">
+              <div className="border-2 border-dashed border-green-200 rounded-xl p-4 text-center bg-green-50/30 hover:bg-green-50 transition-all">
                 <input
                   type="file"
                   accept="image/*"
@@ -408,11 +458,11 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
                   htmlFor="image-upload"
                   className="cursor-pointer flex flex-col items-center gap-2"
                 >
-                  <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-sm text-purple-500">点击上传图片</span>
-                  <span className="text-xs text-gray-400">支持 JPG、PNG，最大 5MB</span>
+                  <span className="text-sm text-green-600">点击上传图片</span>
+                  <span className="text-xs text-gray-400">支持 JPG、PNG，最大 2MB（自动压缩）</span>
                 </label>
               </div>
             )}
