@@ -10,11 +10,14 @@ const mockSpots: Spot[] = [
     country: '中国',
     city: '北京',
     school: '清华大学',
+    major: '计算机科学与技术',
     canCengFan: true,
     signatureDish: '红烧肉',
     contact: '微信号: zhangsan123',
+    imageUrl: '',
     location: { lat: 39.9042, lng: 116.4074 },
     createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '2',
@@ -22,11 +25,14 @@ const mockSpots: Spot[] = [
     country: '中国',
     city: '上海',
     school: '复旦大学',
+    major: '金融学',
     canCengFan: false,
     signatureDish: '糖醋小排',
     contact: '邮箱: lisi@email.com',
+    imageUrl: '',
     location: { lat: 31.2304, lng: 121.4737 },
     createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '3',
@@ -34,11 +40,14 @@ const mockSpots: Spot[] = [
     country: '美国',
     city: '纽约',
     school: '哥伦比亚大学',
+    major: '数据科学',
     canCengFan: true,
     signatureDish: '汉堡薯条',
     contact: '电话: +1-555-1234',
+    imageUrl: '',
     location: { lat: 40.7128, lng: -74.006 },
     createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ]
 
@@ -70,7 +79,7 @@ export function useSpots() {
   const addSpot = useCallback(async (spot: Spot) => {
     if (useMockData) {
       // 模拟模式：直接添加到本地
-      setSpots((prev) => [...prev, { ...spot, id: Date.now().toString() }])
+      setSpots((prev) => [...prev, { ...spot, id: Date.now().toString(), updatedAt: new Date() }])
       return
     }
 
@@ -80,9 +89,11 @@ export function useSpots() {
         country: spot.country,
         city: spot.city,
         school: spot.school,
+        major: spot.major,
         canCengFan: spot.canCengFan,
         signatureDish: spot.signatureDish,
         contact: spot.contact,
+        imageUrl: spot.imageUrl,
         location: spot.location,
       })
       // 服务器会通过 socket 广播，不需要手动更新

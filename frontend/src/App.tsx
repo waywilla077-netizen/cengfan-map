@@ -94,14 +94,15 @@ function App() {
         onSelectSpot={setSelectedSpot}
       />
 
-      {/* 顶部标题栏 */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] bg-gradient-to-b from-black/60 to-transparent pt-4 pb-12 px-4">
+      {/* 顶部标题栏 - 清新插画风格 */}
+      <div className="absolute top-0 left-0 right-0 z-[1000] bg-gradient-to-b from-pink-400/80 via-purple-400/60 to-transparent pt-4 pb-16 px-4">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div>
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">
-              🌍 蹭饭地图
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg flex items-center gap-2">
+              <span className="text-3xl animate-float">�</span>
+              毕业班同学地图
             </h1>
-            <div className="flex items-center gap-3 text-sm text-white/80">
+            <div className="flex items-center gap-3 text-sm text-white/90 mt-1">
               {loading ? (
                 <span className="flex items-center gap-1">
                   <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -112,16 +113,19 @@ function App() {
                 </span>
               ) : (
                 <>
-                  <span>全球 {filteredSpots.length} 个蹭饭点位</span>
+                  <span className="flex items-center gap-1">
+                    <span className="text-base">📍</span>
+                    全球 {filteredSpots.length} 位同学
+                  </span>
                   {!useMockData && onlineCount > 0 && (
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-full">
                       <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                       {onlineCount} 人在线
                     </span>
                   )}
                   {useMockData && (
-                    <span className="text-yellow-300 text-xs">
-                      (演示模式)
+                    <span className="text-yellow-200 text-xs bg-yellow-400/20 px-2 py-0.5 rounded-full">
+                      演示模式
                     </span>
                   )}
                 </>
@@ -132,24 +136,24 @@ function App() {
             {/* 筛选按钮 */}
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="flex items-center gap-2 px-3 py-2 bg-white/20 hover:bg-white/30 text-white font-medium rounded-full transition-all backdrop-blur-sm"
+              className="flex items-center gap-2 px-3 py-2 bg-white/30 hover:bg-white/40 text-white font-medium rounded-xl transition-all backdrop-blur-sm border border-white/20 shadow-lg"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM9 4a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1V4zM9 10a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2z" />
               </svg>
               <span className="hidden sm:inline">筛选</span>
             </button>
-            {/* 添加点位按钮 */}
+            {/* 添加点位按钮 - 清新风格 */}
             <button
               onClick={() => setIsModalOpen(true)}
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 disabled:bg-green-400 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:transform-none"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-400 to-purple-400 hover:from-pink-500 hover:to-purple-500 disabled:from-pink-300 disabled:to-purple-300 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:transform-none border border-white/30"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               <span className="hidden sm:inline">
-                {isSubmitting ? '添加中...' : '添加点位'}
+                {isSubmitting ? '添加中...' : '添加我的位置'}
               </span>
             </button>
           </div>

@@ -21,10 +21,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 地图容器 */
+/* 地图容器 - 清新插画风格 */
 .leaflet-container {
   width: 100%;
   height: 100%;
+  background: linear-gradient(135deg, #fef3f2 0%, #f5f3ff 50%, #eff6ff 100%);
 }
 
 /* 自定义标记样式 */
@@ -33,12 +34,13 @@ body {
   border: none;
 }
 
-/* Leaflet 弹出框样式 */
+/* Leaflet 弹出框样式 - 清新风格 */
 .leaflet-popup-content-wrapper {
-  border-radius: 12px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 40px rgba(236, 72, 153, 0.15) !important;
   padding: 0 !important;
   overflow: hidden;
+  border: 1px solid rgba(236, 72, 153, 0.1) !important;
 }
 
 .leaflet-popup-content {
@@ -48,6 +50,11 @@ body {
 
 .leaflet-popup-tip-container {
   margin-top: -1px;
+}
+
+.leaflet-popup-tip {
+  background: white !important;
+  border: 1px solid rgba(236, 72, 153, 0.1) !important;
 }
 
 .leaflet-popup-close-button {
@@ -121,6 +128,42 @@ body {
   }
 }
 
+/* 点位漂浮动画 - 插画风格 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* 点位心跳动画 */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+}
+
+/* 渐变闪烁 */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
@@ -145,10 +188,24 @@ body {
   animation: ripple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
 /* 移动端适配 */
 @media (max-width: 640px) {
   .leaflet-popup-content-wrapper {
-    border-radius: 8px !important;
+    border-radius: 12px !important;
     min-width: 260px !important;
   }
 
@@ -170,24 +227,24 @@ body {
   }
 }
 
-/* 滚动条样式 */
+/* 滚动条样式 - 清新风格 */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(236, 72, 153, 0.05);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #ec4899, #a855f7);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, #db2777, #9333ea);
 }
 
 /* 触摸优化 */
@@ -206,9 +263,21 @@ button, a {
   -webkit-user-select: none;
 }
 
-/* 玻璃态效果 */
+/* 玻璃态效果 - 清新风格 */
 .glass {
   background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-pink {
+  background: rgba(252, 231, 243, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-purple {
+  background: rgba(243, 232, 255, 0.9);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -217,4 +286,19 @@ button, a {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+/* 插画风格阴影 */
+.shadow-illustration {
+  box-shadow: 
+    0 4px 6px -1px rgba(236, 72, 153, 0.1),
+    0 2px 4px -1px rgba(168, 85, 247, 0.06),
+    0 0 0 1px rgba(236, 72, 153, 0.05);
+}
+
+.shadow-illustration-lg {
+  box-shadow: 
+    0 10px 15px -3px rgba(236, 72, 153, 0.1),
+    0 4px 6px -2px rgba(168, 85, 247, 0.05),
+    0 0 0 1px rgba(236, 72, 153, 0.1);
 }
