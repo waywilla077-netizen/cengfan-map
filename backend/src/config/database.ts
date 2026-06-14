@@ -11,14 +11,15 @@ export async function connectDatabase() {
   }
 
   try {
+    console.log(`正在连接 MongoDB: ${config.mongodbUri}`)
     await mongoose.connect(config.mongodbUri, {
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
     })
 
     isConnected = true
-    console.log('MongoDB 连接成功')
+    console.log('✅ MongoDB 连接成功')
 
     // 监听连接事件
     mongoose.connection.on('error', (err) => {
