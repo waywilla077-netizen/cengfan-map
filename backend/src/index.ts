@@ -66,10 +66,6 @@ const io = new Server(httpServer, {
   pingTimeout: 60000,
   pingInterval: 25000,
   transports: ['websocket', 'polling'],
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
-  reconnectionDelayMax: 5000,
 })
 
 // 初始化 Socket 服务
