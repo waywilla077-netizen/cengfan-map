@@ -1,0 +1,392 @@
+import { useState, useEffect, useRef } from 'react'
+import type { SpotFormData, Spot } from '../types'
+import { geocodeService } from '../services/geocode'
+
+interface AddSpotModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (spot: Spot) => void
+}
+
+const initialFormData: SpotFormData = {
+  name: '',
+  country: '',
+  city: '',
+  school: '',
+  canCengFan: true,
+  signatureDish: '',
+  contact: '',
+}
+
+export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
+  const [formData, setFormData] = useState<SpotFormData>(initialFormData)
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [isLocating, setIsLocating] = useState(false)
+  const [isGeocoding, setIsGeocoding] = useState(false)
+  const [geocodeError, setGeocodeError] = useState('')
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  // 点击外部关闭
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isOpen, onClose])
+
+  // ESC 关闭
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    if (isOpen) {
+      document.addEventListener('keydown', handleEsc)
+    }
+    return () => document.removeEventListener('keydown', handleEsc)
+  }, [isOpen, onClose])
+
+  // 获取当前位置（GPS）
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert('浏览器不支持定位功能')
+      return
+    }
+
+    setIsLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        })
+        setGeocodeError('')
+        setIsLocating(false)
+      },
+      (error) => {
+        console.error('定位失败:', error)
+        setGeocodeError('GPS定位失败，请尝试地址解析')
+        setIsLocating(false)
+      },
+      { enableHighAccuracy: true }
+    )
+  }
+
+  // 通过地址解析获取坐标
+  const geocodeAddress = async () => {
+    if (!formData.country || !formData.city) {
+      setGeocodeError('请先填写国家和城市')
+      return
+    }
+
+    setIsGeocoding(true)
+    setGeocodeError('')
+
+    try {
+      const result = await geocodeService.getLocation(formData.country, formData.city)
+      
+      if (result) {
+        setLocation(result)
+      } else {
+        setGeocodeError('地址解析失败，请尝试其他地址')
+      }
+    } catch (error) {
+      console.error('地址解析错误:', error)
+      setGeocodeError('地址解析失败，请稍后重试')
+    } finally {
+      setIsGeocoding(false)
+    }
+  }
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!location) {
+      alert('请先获取您的位置信息')
+      return
+    }
+
+    if (!formData.name || !formData.country || !formData.city || !formData.school) {
+      alert('请填写完整信息（姓名、国家、城市、学校为必填项）')
+      return
+    }
+
+    const spot: Spot = {
+      id: Date.now().toString(),
+      ...formData,
+      location,
+      createdAt: new Date(),
+    }
+
+    onSubmit(spot)
+    setFormData(initialFormData)
+    setLocation(null)
+    setGeocodeError('')
+    onClose()
+  }
+
+  // 重置表单
+  const resetForm = () => {
+    setFormData(initialFormData)
+    setLocation(null)
+    setGeocodeError('')
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      resetForm()
+    }
+  }, [isOpen])
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto"
+      >
+        {/* 头部 */}
+        <div className="sticky top-0 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 flex items-center justify-between rounded-t-xl">
+          <h2 className="text-lg font-semibold">添加我的蹭饭点位</h2>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* 表单 */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* 姓名 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              姓名 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="请输入您的姓名"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+              required
+            />
+          </div>
+
+          {/* 国家 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              国家 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              placeholder="如：中国、美国、日本"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+              required
+            />
+          </div>
+
+          {/* 城市 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              城市 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              placeholder="请输入城市名称"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+              required
+            />
+          </div>
+
+          {/* 学校 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              学校/单位 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="school"
+              value={formData.school}
+              onChange={handleChange}
+              placeholder="请输入学校或单位名称"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+              required
+            />
+          </div>
+
+          {/* 是否可蹭饭 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              是否可蹭饭
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="canCengFan"
+                  value="true"
+                  checked={formData.canCengFan === true}
+                  onChange={() => setFormData((prev) => ({ ...prev, canCengFan: true }))}
+                  className="w-4 h-4 text-green-600"
+                />
+                <span className="text-green-600 font-medium">可以蹭饭</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="canCengFan"
+                  value="false"
+                  checked={formData.canCengFan === false}
+                  onChange={() => setFormData((prev) => ({ ...prev, canCengFan: false }))}
+                  className="w-4 h-4 text-gray-500"
+                />
+                <span className="text-gray-600 font-medium">仅标记位置</span>
+              </label>
+            </div>
+          </div>
+
+          {/* 拿手菜 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              拿手菜
+            </label>
+            <input
+              type="text"
+              name="signatureDish"
+              value={formData.signatureDish}
+              onChange={handleChange}
+              placeholder="如：红烧肉、糖醋排骨"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+            />
+          </div>
+
+          {/* 联系方式 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              联系方式
+            </label>
+            <input
+              type="text"
+              name="contact"
+              value={formData.contact}
+              onChange={handleChange}
+              placeholder="微信号/邮箱/电话"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+            />
+          </div>
+
+          {/* 位置 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              位置 <span className="text-red-500">*</span>
+            </label>
+            
+            {/* 位置输入框 */}
+            <input
+              type="text"
+              value={location ? `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}` : ''}
+              readOnly
+              placeholder="点击下方按钮获取位置"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 mb-2"
+            />
+
+            {/* 错误提示 */}
+            {geocodeError && (
+              <p className="text-sm text-red-500 mb-2">{geocodeError}</p>
+            )}
+
+            {/* 获取位置按钮组 */}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={getCurrentLocation}
+                disabled={isLocating || isGeocoding}
+                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 transition-colors flex items-center justify-center gap-2 text-sm"
+              >
+                {isLocating ? (
+                  <>
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>定位中</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>GPS定位</span>
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={geocodeAddress}
+                disabled={isGeocoding || isLocating || !formData.country || !formData.city}
+                className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-purple-300 transition-colors flex items-center justify-center gap-2 text-sm"
+              >
+                {isGeocoding ? (
+                  <>
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>解析中</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>地址解析</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              GPS定位需要开启定位权限；地址解析使用国家和城市名称自动匹配坐标
+            </p>
+          </div>
+
+          {/* 提交按钮 */}
+          <div className="pt-4">
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              提交点位
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
