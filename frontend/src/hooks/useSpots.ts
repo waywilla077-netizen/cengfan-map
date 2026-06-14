@@ -75,7 +75,7 @@ export function useSpots() {
     }
 
     try {
-      const newSpot = await socketService.addSpot({
+      await socketService.addSpot({
         name: spot.name,
         country: spot.country,
         city: spot.city,
