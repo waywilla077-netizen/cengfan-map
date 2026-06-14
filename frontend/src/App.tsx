@@ -94,8 +94,8 @@ function App() {
         onSelectSpot={setSelectedSpot}
       />
 
-      {/* 顶部标题栏 - 清新插画风格 */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] bg-gradient-to-b from-pink-400/80 via-purple-400/60 to-transparent pt-4 pb-16 px-4">
+      {/* 顶部标题栏 - 南京农业大学绿色风格 */}
+      <div className="absolute top-0 left-0 right-0 z-[1000] bg-gradient-to-b from-green-500/80 via-emerald-400/60 to-transparent pt-4 pb-16 px-4">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div>
             <h1 className="text-2xl font-bold text-white drop-shadow-lg flex items-center gap-2">
@@ -143,11 +143,11 @@ function App() {
               </svg>
               <span className="hidden sm:inline">筛选</span>
             </button>
-            {/* 添加点位按钮 - 清新风格 */}
+            {/* 添加点位按钮 - 绿色风格 */}
             <button
               onClick={() => setIsModalOpen(true)}
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-400 to-purple-400 hover:from-pink-500 hover:to-purple-500 disabled:from-pink-300 disabled:to-purple-300 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:transform-none border border-white/30"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-400 to-emerald-400 hover:from-green-500 hover:to-emerald-500 disabled:from-green-300 disabled:to-emerald-300 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:transform-none border border-white/30"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

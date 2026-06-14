@@ -21,11 +21,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 地图容器 - 清新插画风格 */
+/* 地图容器 - 清新绿色风格 */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #fef3f2 0%, #f5f3ff 50%, #eff6ff 100%);
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
 }
 
 /* 自定义标记样式 */
@@ -34,13 +34,13 @@ body {
   border: none;
 }
 
-/* Leaflet 弹出框样式 - 清新风格 */
+/* Leaflet 弹出框样式 - 绿色风格 */
 .leaflet-popup-content-wrapper {
   border-radius: 16px !important;
-  box-shadow: 0 10px 40px rgba(236, 72, 153, 0.15) !important;
+  box-shadow: 0 10px 40px rgba(34, 197, 94, 0.15) !important;
   padding: 0 !important;
   overflow: hidden;
-  border: 1px solid rgba(236, 72, 153, 0.1) !important;
+  border: 1px solid rgba(34, 197, 94, 0.1) !important;
 }
 
 .leaflet-popup-content {
@@ -54,7 +54,7 @@ body {
 
 .leaflet-popup-tip {
   background: white !important;
-  border: 1px solid rgba(236, 72, 153, 0.1) !important;
+  border: 1px solid rgba(34, 197, 94, 0.1) !important;
 }
 
 .leaflet-popup-close-button {
@@ -227,24 +227,24 @@ body {
   }
 }
 
-/* 滚动条样式 - 清新风格 */
+/* 滚动条样式 - 绿色风格 */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(236, 72, 153, 0.05);
+  background: rgba(34, 197, 94, 0.05);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #ec4899, #a855f7);
+  background: linear-gradient(135deg, #22c55e, #10b981);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #db2777, #9333ea);
+  background: linear-gradient(135deg, #16a34a, #059669);
 }
 
 /* 触摸优化 */
@@ -288,17 +288,17 @@ button, a {
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* 插画风格阴影 */
+/* 插画风格阴影 - 绿色系 */
 .shadow-illustration {
-  box-shadow: 
-    0 4px 6px -1px rgba(236, 72, 153, 0.1),
-    0 2px 4px -1px rgba(168, 85, 247, 0.06),
-    0 0 0 1px rgba(236, 72, 153, 0.05);
+  box-shadow:
+    0 4px 6px -1px rgba(34, 197, 94, 0.1),
+    0 2px 4px -1px rgba(16, 185, 129, 0.06),
+    0 0 0 1px rgba(34, 197, 94, 0.05);
 }
 
 .shadow-illustration-lg {
-  box-shadow: 
-    0 10px 15px -3px rgba(236, 72, 153, 0.1),
-    0 4px 6px -2px rgba(168, 85, 247, 0.05),
-    0 0 0 1px rgba(236, 72, 153, 0.1);
+  box-shadow:
+    0 10px 15px -3px rgba(34, 197, 94, 0.1),
+    0 4px 6px -2px rgba(16, 185, 129, 0.05),
+    0 0 0 1px rgba(34, 197, 94, 0.1);
 }

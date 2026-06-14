@@ -11,6 +11,7 @@ const spotSchema = new mongoose.Schema({
   signatureDish: { type: String, default: '' },     // 拿手菜/特色
   contact: { type: String, default: '' },           // 联系方式（微信/QQ/邮箱）
   imageUrl: { type: String, default: '' },          // 个人图片URL
+  message: { type: String, default: '' },           // 打招呼/简短留言
   location: {
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },

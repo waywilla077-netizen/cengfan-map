@@ -10,6 +10,7 @@ export interface Spot {
   signatureDish: string     // 拿手菜/特色
   contact: string           // 联系方式（微信/QQ/邮箱）
   imageUrl: string          // 个人图片URL
+  message: string           // 打招呼/简短留言
   location: Location
   createdAt: Date
   updatedAt: Date
@@ -31,6 +32,7 @@ export interface SpotFormData {
   signatureDish: string
   contact: string
   imageUrl: string
+  message: string           // 打招呼/简短留言
 }
 
 // Socket 事件类型

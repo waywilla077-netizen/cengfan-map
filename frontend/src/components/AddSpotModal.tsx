@@ -18,6 +18,7 @@ const initialFormData: SpotFormData = {
   signatureDish: '',
   contact: '',
   imageUrl: '',
+  message: '',
 }
 
 export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
@@ -198,10 +199,10 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
     <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div
         ref={modalRef}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto border border-pink-100"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto border border-green-100"
       >
-        {/* 头部 - 清新渐变 */}
-        <div className="sticky top-0 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        {/* 头部 - 绿色渐变 */}
+        <div className="sticky top-0 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <span className="text-2xl">📍</span>
             添加我的位置
@@ -354,7 +355,22 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
               value={formData.contact}
               onChange={handleChange}
               placeholder="微信号/QQ/邮箱/电话"
-              className="w-full px-4 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-300 focus:border-pink-300 outline-none transition-all bg-pink-50/30"
+              className="w-full px-4 py-2.5 border border-green-200 rounded-xl focus:ring-2 focus:ring-green-300 focus:border-green-300 outline-none transition-all bg-green-50/30"
+            />
+          </div>
+
+          {/* 打招呼/留言 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              打招呼/简短留言
+            </label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="如：欢迎来找我玩！毕业快乐！常联系~"
+              rows={2}
+              className="w-full px-4 py-2.5 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300 outline-none transition-all bg-emerald-50/30 resize-none"
             />
           </div>
 
@@ -481,7 +497,7 @@ export function AddSpotModal({ isOpen, onClose, onSubmit }: AddSpotModalProps) {
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-white font-medium rounded-xl hover:from-pink-500 hover:via-purple-500 hover:to-indigo-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full py-3 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 text-white font-medium rounded-xl hover:from-green-500 hover:via-emerald-500 hover:to-teal-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
             >
               ✨ 提交点位
             </button>
