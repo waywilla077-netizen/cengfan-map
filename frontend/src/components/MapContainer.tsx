@@ -8,11 +8,35 @@ import { SpotPopup } from './SpotPopup'
 // 修复 Leaflet 默认图标问题
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl
 
-// 创建清新风格的图标 - 绿色系表示欢迎拜访（南京农业大学风格）
-const createIcon = (canCengFan: boolean, isHovered: boolean = false) => {
-  // 清新配色：欢迎拜访用绿色渐变，仅标记用淡蓝灰
-  const primaryColor = canCengFan ? '#22c55e' : '#94a3b8' // 绿色 vs 灰蓝
-  const secondaryColor = canCengFan ? '#10b981' : '#cbd5e1' // 深绿 vs 淡灰
+// 马卡龙色系 - 用于水滴状标签的随机颜色
+const macaronColors = [
+  { primary: '#FFB5BA', secondary: '#FF9FAB' }, // 樱花粉
+  { primary: '#FFD3B6', secondary: '#FFC4A3' }, // 蜜桃橙
+  { primary: '#FFAAA5', secondary: '#FF9189' }, // 珊瑚红
+  { primary: '#FF8B94', secondary: '#FF707B' }, // 玫瑰红
+  { primary: '#A8D8EA', secondary: '#87C8DB' }, // 薄荷蓝
+  { primary: '#AA96DA', secondary: '#917BC7' }, // 薰衣草紫
+  { primary: '#D5B8FF', secondary: '#C397FF' }, // 淡紫
+  { primary: '#FFB3BA', secondary: '#FF9AAC' }, // 粉红
+  { primary: '#B5EAD7', secondary: '#98DFC6' }, // 薄荷绿
+  { primary: '#FFDAC1', secondary: '#FFC9A0' }, // 杏色
+  { primary: '#E2F0CB', secondary: '#D1E8B8' }, // 淡黄绿
+  { primary: '#FED7E2', secondary: '#FBB8D0' }, // 浅桃红
+]
+
+// 根据ID获取随机颜色（确保同一ID始终返回相同颜色）
+const getColorById = (id: string) => {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return macaronColors[Math.abs(hash) % macaronColors.length]
+}
+
+// 创建马卡龙色系水滴状图标
+const createIcon = (canCengFan: boolean, isHovered: boolean = false, spotId: string = '') => {
+  // 获取随机马卡龙颜色
+  const colors = canCengFan ? getColorById(spotId) : { primary: '#94a3b8', secondary: '#cbd5e1' }
   const size = isHovered ? 38 : 32
   
   return L.divIcon({
@@ -21,19 +45,19 @@ const createIcon = (canCengFan: boolean, isHovered: boolean = false) => {
       <div style="position: relative; animation: ${isHovered ? 'bounce 0.5s ease-in-out' : 'float 3s ease-in-out infinite'}">
         <svg width="${size}" height="${size + 8}" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="grad-${canCengFan ? 'green' : 'gray'}" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:${primaryColor};stop-opacity:1" />
-              <stop offset="100%" style="stop-color:${secondaryColor};stop-opacity:1" />
+            <linearGradient id="grad-${spotId || 'default'}" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:${colors.primary};stop-opacity:1" />
+              <stop offset="100%" style="stop-color:${colors.secondary};stop-opacity:1" />
             </linearGradient>
-            <filter id="shadow-${canCengFan ? 'green' : 'gray'}">
-              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="${primaryColor}" flood-opacity="0.3"/>
+            <filter id="shadow-${spotId || 'default'}">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="${colors.primary}" flood-opacity="0.3"/>
             </filter>
           </defs>
           <path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 24 16 24s16-12 16-24c0-8.837-7.163-16-16-16z" 
-                fill="url(#grad-${canCengFan ? 'green' : 'gray'})" 
-                filter="url(#shadow-${canCengFan ? 'green' : 'gray'})"/>
-          <circle cx="16" cy="14" r="6" fill="white" opacity="0.9"/>
-          ${canCengFan ? '<text x="16" y="17" text-anchor="middle" font-size="8" fill="#22c55e">👋</text>' : ''}
+                fill="url(#grad-${spotId || 'default'})" 
+                filter="url(#shadow-${spotId || 'default'})"/>
+          <circle cx="16" cy="14" r="6" fill="white" opacity="0.95"/>
+          ${canCengFan ? '<text x="16" y="17" text-anchor="middle" font-size="8" fill="' + colors.primary + '">👋</text>' : ''}
         </svg>
       </div>
     `,
@@ -183,7 +207,7 @@ export function MapContainer({ spots, selectedSpot, onSelectSpot, onViewDetail }
           <Marker
             key={spot.id}
             position={[spot.location.lat, spot.location.lng]}
-            icon={getIcon(spot.canCengFan, hoveredSpot?.id === spot.id)}
+            icon={getIcon(spot.canCengFan, hoveredSpot?.id === spot.id, spot.id)}
             eventHandlers={{
               click: () => onSelectSpot(spot),
               mouseover: () => setHoveredSpot(spot),

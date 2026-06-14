@@ -97,15 +97,15 @@ function App() {
         onViewDetail={setDetailSpot}
       />
 
-      {/* 顶部标题栏 - 南京农业大学绿色风格 */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] bg-gradient-to-b from-green-500/80 via-emerald-400/60 to-transparent pt-4 pb-16 px-4">
+      {/* 顶部标题栏 - 高级感深绿色风格 */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] px-6 py-3 bg-gradient-to-r from-emerald-900 via-green-900 to-emerald-900 rounded-2xl shadow-xl border border-emerald-700/50">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           <div>
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg flex items-center gap-2">
-              <span className="text-3xl animate-float">�</span>
-              毕业班同学地图
+            <h1 className="text-xl font-bold text-amber-100 flex items-center gap-2">
+              <span className="text-2xl animate-float">🍚</span>
+              食工实验221班蹭饭地图
             </h1>
-            <div className="flex items-center gap-3 text-sm text-white/90 mt-1">
+            <div className="flex items-center gap-3 text-xs text-amber-200/80 mt-1">
               {loading ? (
                 <span className="flex items-center gap-1">
                   <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -139,18 +139,18 @@ function App() {
             {/* 筛选按钮 */}
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="flex items-center gap-2 px-3 py-2 bg-white/30 hover:bg-white/40 text-white font-medium rounded-xl transition-all backdrop-blur-sm border border-white/20 shadow-lg"
+              className="flex items-center gap-2 px-3 py-2 bg-emerald-800/50 hover:bg-emerald-700/60 text-amber-100 font-medium rounded-xl transition-all border border-emerald-600/30 shadow-md"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM9 4a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1V4zM9 10a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2z" />
               </svg>
               <span className="hidden sm:inline">筛选</span>
             </button>
-            {/* 添加点位按钮 - 绿色风格 */}
+            {/* 添加点位按钮 - 深绿色高级感风格 */}
             <button
               onClick={() => setIsModalOpen(true)}
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-400 to-emerald-400 hover:from-green-500 hover:to-emerald-500 disabled:from-green-300 disabled:to-emerald-300 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:transform-none border border-white/30"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-800 to-green-800 hover:from-emerald-700 hover:to-green-700 disabled:from-emerald-900 disabled:to-green-900 text-amber-100 font-medium rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:transform-none border border-emerald-600/30"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
