@@ -172,10 +172,10 @@ export function MapContainer({ spots, selectedSpot, onSelectSpot, onViewDetail }
   // 记忆化图标
   const getIcon = useMemo(() => {
     const cache = new Map<string, L.DivIcon>()
-    return (canCengFan: boolean, isHovered: boolean = false) => {
-      const key = `${canCengFan}-${isHovered}`
+    return (canCengFan: boolean, isHovered: boolean = false, spotId: string = '') => {
+      const key = `${canCengFan}-${isHovered}-${spotId}`
       if (!cache.has(key)) {
-        cache.set(key, createIcon(canCengFan, isHovered))
+        cache.set(key, createIcon(canCengFan, isHovered, spotId))
       }
       return cache.get(key)!
     }
