@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { MapContainer } from './components/MapContainer'
 import { AddSpotModal } from './components/AddSpotModal'
 import { FilterPanel } from './components/FilterPanel'
+import { SpotDetailModal } from './components/SpotDetailModal'
 import { LoadingSpinner, ReconnectAlert, Toast } from './components/UI'
 import { useSpots } from './hooks/useSpots'
 import { socketService } from './services/socket'
@@ -12,6 +13,7 @@ function App() {
   const [filteredSpots, setFilteredSpots] = useState<Spot[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
+  const [detailSpot, setDetailSpot] = useState<Spot | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isConnected, setIsConnected] = useState(true)
@@ -92,6 +94,7 @@ function App() {
         spots={filteredSpots}
         selectedSpot={selectedSpot}
         onSelectSpot={setSelectedSpot}
+        onViewDetail={setDetailSpot}
       />
 
       {/* 顶部标题栏 - 南京农业大学绿色风格 */}
@@ -175,6 +178,14 @@ function App() {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddSpot}
       />
+
+      {/* 详情弹窗 */}
+      {detailSpot && (
+        <SpotDetailModal
+          spot={detailSpot}
+          onClose={() => setDetailSpot(null)}
+        />
+      )}
 
       {/* 断线重连提示 */}
       <ReconnectAlert isConnected={isConnected} onReconnect={handleReconnect} />

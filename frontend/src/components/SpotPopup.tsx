@@ -2,9 +2,10 @@ import type { Spot } from '../types'
 
 interface SpotPopupProps {
   spot: Spot
+  onViewDetail?: () => void
 }
 
-export function SpotPopup({ spot }: SpotPopupProps) {
+export function SpotPopup({ spot, onViewDetail }: SpotPopupProps) {
   return (
     <div className="min-w-[200px] p-2 bg-gradient-to-br from-white to-green-50 rounded-xl">
       {/* 图片 */}
@@ -85,8 +86,11 @@ export function SpotPopup({ spot }: SpotPopupProps) {
       </div>
 
       {/* 底部装饰 */}
-      <div className="mt-2 pt-1.5 border-t border-green-100 flex justify-center gap-1">
-        <span className="text-xs text-gray-400">点击查看详情</span>
+      <div 
+        className="mt-2 pt-1.5 border-t border-green-100 flex justify-center gap-1 cursor-pointer hover:bg-green-50/50 rounded-xl transition-colors"
+        onClick={onViewDetail}
+      >
+        <span className="text-xs text-green-600 font-medium">👆 点击查看详情</span>
       </div>
     </div>
   )

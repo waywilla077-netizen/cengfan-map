@@ -47,6 +47,7 @@ interface MapContainerProps {
   spots: Spot[]
   selectedSpot: Spot | null
   onSelectSpot: (spot: Spot | null) => void
+  onViewDetail?: (spot: Spot) => void
 }
 
 function MapController({ selectedSpot }: { selectedSpot: Spot | null }) {
@@ -128,7 +129,7 @@ function HoverCard({ spot }: { spot: Spot }) {
   )
 }
 
-export function MapContainer({ spots, selectedSpot, onSelectSpot }: MapContainerProps) {
+export function MapContainer({ spots, selectedSpot, onSelectSpot, onViewDetail }: MapContainerProps) {
   const mapRef = useRef<L.Map | null>(null)
   const [hoveredSpot, setHoveredSpot] = useState<Spot | null>(null)
 
@@ -190,7 +191,7 @@ export function MapContainer({ spots, selectedSpot, onSelectSpot }: MapContainer
             }}
           >
             <Popup className="spot-popup">
-              <SpotPopup spot={spot} />
+              <SpotPopup spot={spot} onViewDetail={() => onViewDetail?.(spot)} />
             </Popup>
           </Marker>
         ))}
