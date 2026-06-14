@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { MapContainer as LeafletMapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -49,7 +49,7 @@ interface MapContainerProps {
   onSelectSpot: (spot: Spot | null) => void
 }
 
-function MapController({ selectedSpot, onResetView }: { selectedSpot: Spot | null; onResetView?: () => void }) {
+function MapController({ selectedSpot }: { selectedSpot: Spot | null }) {
   const map = useMap()
 
   // 点击点位时只移动到位置，不放大
@@ -175,7 +175,7 @@ export function MapContainer({ spots, selectedSpot, onSelectSpot }: MapContainer
         />
 
         {/* 地图控制器 */}
-        <MapController selectedSpot={selectedSpot} onResetView={handleResetView} />
+        <MapController selectedSpot={selectedSpot} />
 
         {/* 渲染所有点位 */}
         {spots.map((spot) => (
