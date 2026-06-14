@@ -95,6 +95,7 @@ export function useSpots() {
         contact: spot.contact,
         imageUrl: spot.imageUrl,
         location: spot.location,
+        updatedAt: new Date(),
       })
       // 服务器会通过 socket 广播，不需要手动更新
     } catch (error) {
