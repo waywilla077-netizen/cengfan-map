@@ -7,6 +7,8 @@ interface SocketResponse<T = unknown> {
   error?: string
 }
 
+const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+
 class SocketService {
   private socket: Socket | null = null
   private connectionPromise: Promise<Socket> | null = null
@@ -21,7 +23,7 @@ class SocketService {
     }
 
     this.connectionPromise = new Promise((resolve, reject) => {
-      this.socket = io('/', {
+      this.socket = io(SOCKET_URL, {
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionAttempts: 10,
