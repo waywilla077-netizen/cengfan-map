@@ -3,9 +3,10 @@ import type { Spot } from '../types'
 interface SpotDetailModalProps {
   spot: Spot
   onClose: () => void
+  onDelete?: () => void
 }
 
-export function SpotDetailModal({ spot, onClose }: SpotDetailModalProps) {
+export function SpotDetailModal({ spot, onClose, onDelete }: SpotDetailModalProps) {
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div
@@ -114,10 +115,16 @@ export function SpotDetailModal({ spot, onClose }: SpotDetailModalProps) {
           </div>
 
           {/* 底部按钮 */}
-          <div className="mt-5 pt-4 border-t border-green-100">
+          <div className="mt-5 pt-4 border-t border-green-100 flex gap-3">
+            <button
+              onClick={onDelete}
+              className="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl transition-all shadow-md"
+            >
+              删除
+            </button>
             <button
               onClick={onClose}
-              className="w-full py-3 bg-gradient-to-r from-green-400 to-emerald-400 hover:from-green-500 hover:to-emerald-500 text-white font-medium rounded-xl transition-all shadow-md"
+              className="flex-1 py-3 bg-gradient-to-r from-green-400 to-emerald-400 hover:from-green-500 hover:to-emerald-500 text-white font-medium rounded-xl transition-all shadow-md"
             >
               关闭
             </button>

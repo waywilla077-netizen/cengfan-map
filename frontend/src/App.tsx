@@ -9,7 +9,7 @@ import { socketService } from './services/socket'
 import type { Spot } from './types'
 
 function App() {
-  const { spots, loading, onlineCount, useMockData, addSpot } = useSpots()
+  const { spots, loading, onlineCount, useMockData, addSpot, removeSpot } = useSpots()
   const [filteredSpots, setFilteredSpots] = useState<Spot[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
@@ -64,6 +64,21 @@ function App() {
       showToast('添加点位失败，请重试', 'error')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  // 删除点位
+  const handleDeleteSpot = async (spot: Spot) => {
+    if (!window.confirm(`确定要删除 ${spot.name} 的点位吗？此操作不可撤销。`)) {
+      return
+    }
+    try {
+      await removeSpot(spot.id)
+      setDetailSpot(null)
+      showToast('点位删除成功', 'success')
+    } catch (error) {
+      console.error('删除失败:', error)
+      showToast('删除点位失败，请重试', 'error')
     }
   }
 
@@ -184,6 +199,7 @@ function App() {
         <SpotDetailModal
           spot={detailSpot}
           onClose={() => setDetailSpot(null)}
+          onDelete={() => handleDeleteSpot(detailSpot)}
         />
       )}
 
