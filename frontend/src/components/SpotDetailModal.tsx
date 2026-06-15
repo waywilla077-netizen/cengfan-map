@@ -13,12 +13,12 @@ export function SpotDetailModal({ spot, onClose }: SpotDetailModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* 头部图片 */}
-        <div className="relative h-48 bg-gradient-to-br from-green-400 to-emerald-500">
+        <div className="relative h-48 bg-gradient-to-br from-emerald-200 to-green-200 flex items-center justify-center overflow-hidden">
           {spot.imageUrl ? (
             <img
               src={spot.imageUrl}
               alt={spot.name}
-              className="w-full h-full object-cover"
+              className="max-w-full max-h-full object-contain"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
